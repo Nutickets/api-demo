@@ -8,4 +8,4 @@
 </p>
 
 ## About Nutickets API Demo
-See `routes/web.php` for simple integration examples for the nutickets API.
+See `routes/web.php` for simple integration examples for the nutickets API. This repo is based off a fresh [Laravel 8.x](https://laravel.com/docs/8.x) installation
