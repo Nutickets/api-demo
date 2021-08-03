@@ -49,18 +49,24 @@
       </div>
       <div class="mt-6 pt-10 grid gap-16 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-12">
         @foreach ($event['tickets'] as $ticket)
+          @php
+            $timeslot = collect($event['timeslots'] ?? [])->first(fn ($timeslot) => in_array($ticket['id'], $timeslot['tickets']));
+          @endphp
           <div>
             <p class="text-sm text-gray-500">
-              <time datetime="2020-03-16">Prices include fees & tax</time>
+              <span>Prices include fees & tax</span>
             </p>
-            <a href="#" class="mt-2 block">
+            <span class="mt-2 block">
               <p class="text-xl font-semibold text-gray-900">
                 {{ $ticket['name'] }}
+                @if (!empty($timeslot))
+                    @ {{ $timeslot['name'] }}
+                @endif
               </p>
               <p class="mt-3 text-base text-gray-500">
                 {!! $ticket['description'] !!}
               </p>
-            </a>
+            </span>
             <div class="mt-3">
               <a href="/buy/{{ $ticket['id'] }}" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
                 Buy Now ({{ $ticket['currencySymbol'] }}{{ $ticket['totalPrice'] / 100 }})
