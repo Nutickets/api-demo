@@ -12,6 +12,8 @@ return [
     | any other location as required by the application or its packages.
     |
     */
+   
+    'nutickets_api_key' => env('NUTICKETS_API_KEY'),
 
     'name' => env('APP_NAME', 'Laravel'),
 

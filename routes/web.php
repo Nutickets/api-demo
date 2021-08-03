@@ -14,14 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $token = '<INSERT-YOUR-API-TOKEN>';
-
-    $events = Http::withToken($token)->get('https://api.nuwebgroup.com/v1/events', ['limit' => 4])->json();
+    $events = Http::withToken(config('app.nutickets_api_key'))->get('https://api.nuwebgroup.com/v1/events', ['limit' => 4])->json();
 
     $data = [];
 
     foreach ($events['events'] as $event) {
-        $eventTickets = Http::withToken($token)->get('https://api.nuwebgroup.com/v1/event-tickets', ['eventId' => $event['id']])->json();
+        $eventTickets = Http::withToken(config('app.nutickets_api_key'))->get('https://api.nuwebgroup.com/v1/event-tickets', ['eventId' => $event['id']])->json();
         $data[] = [
             'event' => $event,
             'timeslots' => $eventTickets['timeslots'],
@@ -33,9 +31,7 @@ Route::get('/', function () {
 });
 
 Route::get('/buy/{ticketId}', function ($ticketId) {
-    $token = '<INSERT-YOUR-API-TOKEN>';
-
-    $basket = Http::withToken($token)->post('https://api.nuwebgroup.com/v1/basket-items', [
+    $basket = Http::withToken(config('app.nutickets_api_key'))->post('https://api.nuwebgroup.com/v1/basket-items', [
         'items' => [
             ['id' => $ticketId, 'quantity' => 1],
             // ..
@@ -45,14 +41,14 @@ Route::get('/buy/{ticketId}', function ($ticketId) {
     // Before the next call, you can add/remove/update items in the basket, collect customer info and process a payment.
 
     $orderId = $basket['id'];
-    Http::withToken($token)->post('https://api.nuwebgroup.com/v1/orders/complete', [
+    Http::withToken(config('app.nutickets_api_key'))->post('https://api.nuwebgroup.com/v1/orders/complete', [
         'basketId' => $orderId,
         'paymentMethod' => 'cash',
         'customerEmail' => 'joseph.rushton@nutickets.com',
         'customerName' => 'Joseph Rushton',
     ])->json();
 
-    $order = Http::withToken($token)->get('https://api.nuwebgroup.com/v1/order', [
+    $order = Http::withToken(config('app.nutickets_api_key'))->get('https://api.nuwebgroup.com/v1/order', [
         'orderId' => $orderId,
     ])->json();
 
